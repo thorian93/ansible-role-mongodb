@@ -20,9 +20,11 @@ systemLog:
   path: /var/log/mongodb/mongod.log
 
 # network interfaces
+{% if not mongodb_replicaset|length() %}
 net:
   port: "{{ mongodb_bind_port }}"
   bindIp: "{{ mongodb_bind_ip }}"
+{% endif %}
 
 {% if ansible_distribution != "RedHat" %}
 processManagement:
@@ -34,7 +36,7 @@ processManagement:
 #operationProfiling:
 
 #replication:
-{% if mongodb_replicaset|legth() %}
+{% if mongodb_replicaset|length() %}
 replication:
    replSetName: "{{ mongodb_replicaset }}"
 net:
