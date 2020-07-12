@@ -1,19 +1,19 @@
 ---
 - name: "Install YUM Key for the MongoDB Repository."
   yum_key:
-    key: "{{ graylog_mongodb_gpgkey }}"
+    key: "{{ mongodb_gpgkey }}"
     state: present
 
 - name: "Install MongoDB Repository on Ubuntu."
   apt_repository:
-    repo: "{{ graylog_mongodb_ubuntu_repo }}"
+    repo: "{{ mongodb_ubuntu_repo }}"
     state: "present"
     update_cache: false # Workaround
   when: ansible_distribution == 'Ubuntu'
 
 - name: "Install MongoDB Repository on Debian."
   apt_repository:
-    repo: "{{ graylog_mongodb_debian_repo }}"
+    repo: "{{ mongodb_debian_repo }}"
     state: "present"
     update_cache: false # Workaround
   when: ansible_distribution == 'Debian'
