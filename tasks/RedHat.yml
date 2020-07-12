@@ -1,0 +1,47 @@
+---
+- name: "Install YUM Key for the MongoDB Repository."
+  yum_key:
+    key: "{{ graylog_mongodb_gpgkey }}"
+    state: present
+
+- name: "Install MongoDB Repository on Ubuntu."
+  apt_repository:
+    repo: "{{ graylog_mongodb_ubuntu_repo }}"
+    state: "present"
+    update_cache: false # Workaround
+  when: ansible_distribution == 'Ubuntu'
+
+- name: "Install MongoDB Repository on Debian."
+  apt_repository:
+    repo: "{{ graylog_mongodb_debian_repo }}"
+    state: "present"
+    update_cache: false # Workaround
+  when: ansible_distribution == 'Debian'
+
+- name: "Install MongoDB."
+  package:
+    name: "mongodb-org"
+    state: "present"
+  notify: "systemd dameon-reload"
+
+- name: "Configure MongoDB."
+  template:
+    src: "mongodb.conf.j2"
+    dest: "/etc/mongod.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: "restart mongod"
+
+- meta: "flush_handlers"
+
+- name: "Wait for MongoDB to start."
+  wait_for:
+    host: "127.0.0.1"
+    port: 27017
+    delay: 5
+    connect_timeout: 1
+
+- name: "Ensure correct FeatureCompatibilityVersion."
+  shell: |
+    mongo --eval "db.adminCommand( { setFeatureCompatibilityVersion: '{{ mongodb_featurecompatibilityversion }}' } )"

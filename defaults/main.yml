@@ -1,0 +1,14 @@
+---
+# Support for OSes:
+mongodb_stable_os:
+  - Debian 9
+  - Debian 10
+  - Ubuntu 16
+  - Ubuntu 18
+
+# MongoDB
+mongodb_version: "4.2"
+mongodb_featurecompatibilityversion: "4.2"
+mongodb_bind_ip: "127.0.0.1"
+mongodb_bind_port: "27017"
+mongodb_replicaset: "rs0"

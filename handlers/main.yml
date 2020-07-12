@@ -1,0 +1,11 @@
+---
+
+- name: "systemd dameon-reload"
+  systemd:
+    daemon_reload: yes
+
+- name: "restart mongod"
+  service:
+    name: "mongod"
+    state: "restarted"
+    enabled: "yes"
